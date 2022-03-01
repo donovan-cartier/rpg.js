@@ -6,6 +6,7 @@ var player = {
     currentQuest: questList[0],
     currentLocation : 'plaine',
     gold: 0,
+    inventory: [],
 
     updateGold(amount){
         this.gold += amount;
@@ -18,5 +19,10 @@ var player = {
             this.hp = this.maxHp;
         }
         playerHpText.innerHTML = player.hp + "/" + player.maxHp + " PV";
+    },
+
+    addToInventory(item){
+        this.inventory.push(item);
+        itemList.innerHTML += "<li class='item-element'>" + item.name + " <button class='button-use-item' data-item='" + item.name + "'>Utiliser</button></li>";
     }
 }

@@ -21,7 +21,7 @@ function randomEvent(){
         case 1:
             exploreText.innerHTML = "Niveau " + expeditionLevel + " : Rencontre avec un monstre !";
             setTimeout(() => {
-                startBattle();
+                spawnMonster();
             }, 750);
             break;
 
@@ -47,7 +47,7 @@ function randomEvent(){
             if(Math.random() < 0.5){
                 exploreText.innerHTML = "Niveau " + expeditionLevel + " : Campement (infesté)";
                 if(confirm("Le campement est infesté de monstres ! Visiter le campement tout de même ?")){
-                    startBattle();
+                    spawnMonster();
                 }
             } else {
                 exploreText.innerHTML = "Niveau " + expeditionLevel + " : Campement";
@@ -64,10 +64,11 @@ function randomEvent(){
     }
 }
 
-function startBattle(){
+function startBattle(spawnedMonster){
     attackButton.disabled = false;
-    itemsButton.disabled = false;
-    spawnMonster();
+    // itemsButton.disabled = false;
+    itemList.style.display = "block";
+    currentEnemy = spawnedMonster;
 
     // player.hp--;
     // playerHpText.innerHTML = player.hp + "/" + player.maxHp;
@@ -123,6 +124,10 @@ function spawnMonster(){
         }
     });
     var spawnedMonster = availableMonsters[Math.floor(Math.random()*availableMonsters.length)];
-    console.log(spawnedMonster);
-
+    exploreText.innerHTML = "Combat : " + spawnedMonster.name + " (" + spawnedMonster.health + " PV)";
+    startBattle(spawnedMonster);
 }
+
+attackButton.onclick = function(){
+    console.log(currentEnemy.health)
+};

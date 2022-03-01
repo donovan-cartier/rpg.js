@@ -13,6 +13,9 @@ var exploreText = document.getElementById('explore-text');
 var attackButton = document.getElementById('attack');
 var itemsButton = document.getElementById('items');
 
+var itemList = document.getElementById('item-list');
+
+
 var questTitleText = document.getElementById('quest-title');
 var questDescriptionText = document.getElementById('quest-description');
 var questRewardText = document.getElementById('quest-reward');
@@ -50,8 +53,9 @@ questDescriptionText.innerHTML = player.currentQuest.description;
 questRewardText.innerHTML = player.currentQuest.reward + " pièces d'or";
 
 var monstersList;
+var itemsList;
 
-function importMonsters(file){
+function importData(file){
         var rawFile = new XMLHttpRequest();
         rawFile.open("GET", file, true);
         rawFile.onreadystatechange = function ()
@@ -60,8 +64,25 @@ function importMonsters(file){
             {
                 if(rawFile.status === 200 || rawFile.status == 0)
                 {
-                    var monstersJSON = rawFile.responseText;
-                    monstersList = JSON.parse(monstersJSON);
+                    var responseJSON = rawFile.responseText;
+                    switch (file) {
+                        case "/script/monsters.json":
+                            monstersList = JSON.parse(responseJSON);
+                            break;
+
+                       case "/script/items.json":
+                            itemsList = JSON.parse(responseJSON);
+        
+                            // debug
+                            player.addToInventory(itemsList.items[1])
+                            player.addToInventory(itemsList.items[1])
+                            player.addToInventory(itemsList.items[0])
+
+                            break;
+
+                        default:
+                            break;
+                    }
 
                 }
             }
@@ -69,5 +90,7 @@ function importMonsters(file){
         rawFile.send(null);
 }
 
-importMonsters("/script/monsters.json");
+importData("/script/monsters.json");
+importData("/script/items.json");
 
+var currentEnemy;

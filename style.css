@@ -1,4 +1,4 @@
-p, h1, h2, h3{
+p, h1, h2, h3, #item-list>li{
     color: white;
     font-family: 'Poppins', sans-serif;
 }
@@ -51,5 +51,9 @@ body{
 }
 
 #attack:disabled, #items:disabled{
+    display: none;
+}
+
+#item-list{
     display: none;
 }
