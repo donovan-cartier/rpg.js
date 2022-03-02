@@ -41,11 +41,6 @@ exploreButton.addEventListener('click', function(){
     this.disabled = true; 
 });
 
-attackButton.addEventListener('click', function(){
-    console.log("player.attack()");
-    this.disabled = true; 
-});
-
 expeditionLevel = 0;
 
 questTitleText.innerHTML = player.currentQuest.title;

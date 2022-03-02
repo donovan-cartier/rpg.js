@@ -48,15 +48,16 @@ function randomEvent(){
                 exploreText.innerHTML = "Niveau " + expeditionLevel + " : Campement (infesté)";
                 if(confirm("Le campement est infesté de monstres ! Visiter le campement tout de même ?")){
                     spawnMonster();
+                } else {
+                    explore();
                 }
             } else {
                 exploreText.innerHTML = "Niveau " + expeditionLevel + " : Campement";
                 player.updateHp(5);
+                setTimeout(() => {
+                    explore();
+                }, 1000);
             }
-
-            setTimeout(() => {
-                explore();
-            }, 1000);
             break;
 
         default:
@@ -64,27 +65,10 @@ function randomEvent(){
     }
 }
 
-function startBattle(spawnedMonster){
+function startBattle(){
     attackButton.disabled = false;
     // itemsButton.disabled = false;
     itemList.style.display = "block";
-    currentEnemy = spawnedMonster;
-
-    // player.hp--;
-    // playerHpText.innerHTML = player.hp + "/" + player.maxHp;
-    // if(player.hp == 0){
-    //     exploreText.innerHTML = "Vous rentrez bredouille...";
-    //     checkQuestConditions();
-    //     expeditionLevel = 0;
-    //     treasuresObtained = 0;
-
-    //     player.hp = player.maxHp;
-    //     playerHpText.innerHTML = player.hp + "/" + player.maxHp;
-    //     exploreButton.disabled = false; 
-        
-    // } else {
-    //     explore();
-    // }
 }
 
 function checkQuestConditions(){
@@ -125,9 +109,52 @@ function spawnMonster(){
     });
     var spawnedMonster = availableMonsters[Math.floor(Math.random()*availableMonsters.length)];
     exploreText.innerHTML = "Combat : " + spawnedMonster.name + " (" + spawnedMonster.health + " PV)";
-    startBattle(spawnedMonster);
+    setEnemyAttributes(spawnedMonster);
 }
 
-attackButton.onclick = function(){
-    console.log(currentEnemy.health)
-};
+attackButton.addEventListener('click', function(){ 
+    this.disabled = true;
+    currentEnemy.takeDamage(Math.floor(Math.random() * (5 - 2 + 1)) + 2);
+});
+
+
+function setEnemyAttributes(spawnedMonster){
+    currentEnemy = {
+        name: spawnedMonster.name,
+        health: spawnedMonster.health,
+        baseDamage: spawnedMonster.baseDamage,
+
+        takeDamage(amount){
+            this.health -= amount;
+            exploreText.innerHTML = "Linsen attaque et inflige " + amount + " PV au " + this.name + " !";
+            setTimeout(() => {
+                if(this.health <= 0){
+                    this.health = 0;
+                    exploreText.innerHTML = "Combat : " + this.name + " (" + this.health + " PV)";
+                    endBattle();
+                } else {
+                    this.attack(Math.floor(Math.random() * (3 - 1 + 1)) + 1);
+                }
+            }, 1500);            
+        },
+
+        attack(amount){
+            exploreText.innerHTML = this.name + " attaque et inflige " + amount + " PV à Linsen !";
+            setTimeout(() => {
+                player.takeDamage(amount);
+            }, 1500);
+        }
+    }
+    startBattle();
+
+}
+
+function endBattle(){
+    exploreText.innerHTML = currentEnemy.name + " meurt !";
+    currentEnemy = "";
+    itemList.style.display = "none";
+    
+    setTimeout(() => {
+        explore();
+    }, 1500);
+}

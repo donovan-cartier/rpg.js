@@ -1,7 +1,7 @@
 var player = {
     name: "Linsen",
-    hp: 2,
-    maxHp: 5,
+    hp: 10,
+    maxHp: 10,
     currentWeapon: basicSword,
     currentQuest: questList[0],
     currentLocation : 'plaine',
@@ -19,6 +19,25 @@ var player = {
             this.hp = this.maxHp;
         }
         playerHpText.innerHTML = player.hp + "/" + player.maxHp + " PV";
+    },
+
+    takeDamage(amount){
+        this.hp -= amount;
+        if(this.hp <= 0){
+            this.hp = 0;
+            exploreText.innerHTML = "Vous rentrez bredouille...";
+            checkQuestConditions();
+            expeditionLevel = 0;
+            treasuresObtained = 0;
+
+            this.hp = this.maxHp;
+            playerHpText.innerHTML = player.hp + "/" + player.maxHp;
+            exploreButton.disabled = false; 
+        } else {
+            attackButton.disabled = false;
+            playerHpText.innerHTML = player.hp + "/" + player.maxHp + " PV";
+            exploreText.innerHTML = "Combat : " + currentEnemy.name + " (" + currentEnemy.health + " PV)";
+        }
     },
 
     addToInventory(item){
